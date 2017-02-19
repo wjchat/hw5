@@ -2,6 +2,11 @@ import unittest
 import tweepy
 import requests
 import json
+import keys
+import codecs
+import sys
+
+sys.stdout = codecs.getwriter('utf8')(sys.stdout.buffer)
 
 ## SI 206 - W17 - HW5
 ## COMMENT WITH:
@@ -35,10 +40,10 @@ import json
 ## **** If you choose not to do that, we strongly advise using authentication information for an 'extra' Twitter account you make just for this class, and not your personal account, because it's not ideal to share your authentication information for a real account that you use frequently.
 
 ## Get your secret values to authenticate to Twitter. You may replace each of these with variables rather than filling in the empty strings if you choose to do the secure way for 50 EC points
-consumer_key = "Z9SpIs9GLy15upqLfgZXZVjPb" 
-consumer_secret = "7gzpa2BhYijJMlKz28MUgJl0tWGW4GUZ4d07t0rnNn7cCHjmMn"
-access_token = "832035884551852032-WaXvHvNnJk9D405WjdyZQZLpnXXXRH1"
-access_token_secret = "hc9qLdU23irSYgxtJr7nrafbRLNMqFoQZTzczJdJtoLYZ"
+consumer_key = keys.consumer_key
+consumer_secret = keys.consumer_secret
+access_token = keys.access_token
+access_token_secret = keys.access_token_secret
 ## Set up your authentication to Twitter
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -77,12 +82,24 @@ def search_twitter(searchQ):
 
 		CACHE_DICTION[searchQ] = search_results
 
-		f = open(CACHE_FNAME, 'w', encoding = 'utf-8')
+		f = open(CACHE_FNAME, 'w', encoding = "utf-8")
 		f.write(json.dumps(CACHE_DICTION))
 		f.close()
 
+	return(CACHE_DICTION[searchQ])
 
-print(search_twitter("puppy"))
+
+searcher = search_twitter("puppy")
+
+for item in searcher['statuses'][:3]:
+	print(item['text'])
+	print(item['created_at'])
+	print(' ')
+
+
+
+
+
 
 
 
