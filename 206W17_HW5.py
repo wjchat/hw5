@@ -49,7 +49,7 @@ api = tweepy.API(auth, parser=tweepy.parsers.JSONParser()) # Set up library to g
 
 CACHE_FNAME = "HW5_cache_data.json"
 try:
-	cache_file_obj = open(CACHE_FNAME,'r', encoding = "utf-8") 
+	cache_file_obj = open(CACHE_FNAME,'r') 
 	cache_contents = cache_file_obj.read() 
 	CACHE_DICTION = json.loads(cache_contents)                                                                       
 
