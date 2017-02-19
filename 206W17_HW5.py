@@ -35,19 +35,60 @@ import json
 ## **** If you choose not to do that, we strongly advise using authentication information for an 'extra' Twitter account you make just for this class, and not your personal account, because it's not ideal to share your authentication information for a real account that you use frequently.
 
 ## Get your secret values to authenticate to Twitter. You may replace each of these with variables rather than filling in the empty strings if you choose to do the secure way for 50 EC points
-consumer_key = "" 
-consumer_secret = ""
-access_token = ""
-access_token_secret = ""
+consumer_key = "Z9SpIs9GLy15upqLfgZXZVjPb" 
+consumer_secret = "7gzpa2BhYijJMlKz28MUgJl0tWGW4GUZ4d07t0rnNn7cCHjmMn"
+access_token = "832035884551852032-WaXvHvNnJk9D405WjdyZQZLpnXXXRH1"
+access_token_secret = "hc9qLdU23irSYgxtJr7nrafbRLNMqFoQZTzczJdJtoLYZ"
 ## Set up your authentication to Twitter
+
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth, parser=tweepy.parsers.JSONParser()) # Set up library to grab stuff from twitter with your authentication, and return it in a JSON-formatted way
 
 ## Write the rest of your code here!
 
+CACHE_FNAME = "HW5_cache_data.json"
+try:
+	cache_file_obj = open(CACHE_FNAME,'r', encoding = "utf-8") 
+	cache_contents = cache_file_obj.read() 
+	CACHE_DICTION = json.loads(cache_contents)                                                                       
+
+except:
+	CACHE_DICTION = {} # I know that in my code # Inside a function that gets data from the internet # I will have to make sure that I properly add data to cache_diction # I will have to make sure that I properly write CACHE_DICTION to a file, so I'll have it next time I run my program
+
+def canonical_order(d):     
+	alphabetized_keys = sorted(d.keys())     
+	res = []    
+	for k in alphabetized_keys: 
+	    res.append((k, d[k]))     
+	    return res
+
+def search_twitter(searchQ):
+	results = api.search(q = searchQ) 
+	return(results)
+
+	if searchQ in CACHE_DICTION:
+		print("Using cached data for", searchQ)
+
+	else:
+		print("getting new data from the web")
+
+		search_results = api.search(q = searchQ)
+
+		CACHE_DICTION[searchQ] = search_results
+
+		f = open(CACHE_FNAME, 'w', encoding = 'utf-8')
+		f.write(json.dumps(CACHE_DICTION))
+		f.close()
+
+
+print(search_twitter("puppy"))
+
+
+
 #### Recommended order of tasks: ####
 ## 1. Set up the caching pattern start -- the dictionary and the try/except statement shown in class.
+
 ## 2. Write a function to get twitter data that works with the caching pattern, so it either gets new data or caches data, depending upon what the input to search for is. You can model this off the class exercise from Tuesday.
 ## 3. Invoke your function, save the return value in a variable, and explore the data you got back!
 ## 4. With what you learn from the data -- e.g. how exactly to find the text of each tweet in the big nested structure -- write code to print out content from 3 tweets, as shown above.
